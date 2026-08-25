@@ -14,6 +14,7 @@ import json
 from escpos.printer import Usb
 from datetime import datetime
 from PIL import Image
+import usb
 
 # Initialize the thermal printer
 p = Usb(idVendor=0x28e9, idProduct=0x0289, in_ep=0x81, out_ep=0x03, width=384)
@@ -183,7 +184,12 @@ Bedankt voor het parkeren van je cultuur. Blijf reflecteren op je cultuur door j
             print_logo()  # Print the logo at the bottom
             p.cut()  # Cut the paper after printing
             # p.text("\n\n") # Print some space after the logo
-            logging.info("Receipt printed successfully.")    
+            logging.info("Receipt printed successfully.")
+        except usb.core.USBError as e:
+            print(f"USB error: {e}")
+            print("Printer connection lost. Trying to save the connection.")
+            p.close()
+            p.open()
         except Exception as e:
             logging.error(f"Error while printing: {e}")
 

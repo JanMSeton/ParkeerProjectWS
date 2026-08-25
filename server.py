@@ -16,7 +16,7 @@ from datetime import datetime
 from PIL import Image
 
 # Initialize the thermal printer
-p = Usb(0x28e9, 0x0289, 0, 0, 0x81, 3, width=384)
+p = Usb(idVendor=0x28e9, idProduct=0x0289, in_ep=0x81, out_ep=0x03, width=384)
 
 # Mapping of answers to specific texts
 answer_text_mapping = {

@@ -16,8 +16,45 @@ from datetime import datetime
 from PIL import Image
 import usb
 
-# Initialize the thermal printer
-p = Usb(idVendor=0x28e9, idProduct=0x0289, in_ep=0x81, out_ep=0x03, width=384)
+
+
+import time
+
+
+def create_printer():
+    return Usb(
+        idVendor=0x28e9,
+        idProduct=0x0289,
+        in_ep=0x81,
+        out_ep=0x03,
+        width=384,
+    )
+
+
+p = create_printer()
+
+
+def reset_printer():
+    global p
+
+    print("Resetting printer connection...")
+
+    try:
+        p.close()
+    except Exception:
+        pass
+
+    p = None
+
+    time.sleep(0.5)
+
+    try:
+        p = create_printer()
+        print("Printer connection restored.")
+        return True
+    except Exception as e:
+        print(f"Could not reconnect printer: {e}")
+        return False
 
 # Mapping of answers to specific texts
 answer_text_mapping = {
@@ -176,25 +213,47 @@ Je kan deze ontmoetingen trainen door de 54321-oefening. Benoem\n
 \n-----------------------------\n
 Bedankt voor het parkeren van je cultuur. Blijf reflecteren op je cultuur door jouw Bon van Betekenis mee te nemen op project, met anderen de delen en regelmatig door te nemen.\n"""
 
-            # Print the receipt
+        # Print the receipt
         try:
-            print_logo()  # Print the logo at the top
-            p.text("\n\n") # Print some space after the logo
+            print_logo()
+            p.text("\n\n")
             p.text(receipt_template)
-            print_logo()  # Print the logo at the bottom
-            p.cut()  # Cut the paper after printing
-            # p.text("\n\n") # Print some space after the logo
+            print_logo()
+            p.cut()
+
             logging.info("Receipt printed successfully.")
+
         except usb.core.USBError as e:
-            print(f"USB error: {e}")
-            print("Printer connection lost. Trying to save the connection.")
-            p.close()
-            p.open()
+            logging.error(f"PRINTER CONNECTION LOST: {e}")
+
+            # Reset the USB connection so the next request can try again
+            reset_printer()
+
+            # Stop processing THIS request.
+            # The next HTTP request will start fresh.
+            self._set_response()
+            response = {
+                "ok": False,
+                "error": "Printer connection lost"
+            }
+            self.wfile.write(json.dumps(response).encode('utf-8'))
+            return
+
         except Exception as e:
             logging.error(f"Error while printing: {e}")
 
+            self._set_response()
+            response = {
+                "ok": False,
+                "error": "Printing failed"
+            }
+            self.wfile.write(json.dumps(response).encode('utf-8'))
+            return
+
+        # Only reached when printing succeeded
         self._set_response()
         response = {"ok": True}
+        self.wfile.write(json.dumps(response).encode('utf-8'))
         self.wfile.write(json.dumps(response).encode('utf-8'))
 
 def print_logo():

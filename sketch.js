@@ -1,7 +1,7 @@
 // Sources and collaborator: P5.js library, ChatGPT, AJ
 
 let printerReady = true;
-let cooldown = 30;
+let cooldown = 45;
 let enableEasterEgg = false;
 let easterEggSound = null;
 let easterEggImg = null;
@@ -426,54 +426,50 @@ document.addEventListener("keydown", function(event) {
     }
 
   // Trigger sending answers (P key) but only if at the final page
-  if (pageNumber === 16) {
-    if (keyCode === 80) { // P key
-        if (sendAnswers() === false) {
-          console.log("Tried to print while printer wasnt ready")
-          pageNumber = 17
-        } else {
-          myName = ''; // reset myName for the next user --> wat als ik dit op pagina 1 zet?
-          console.log("myName reset after printing"); // for debugging 
-          pageNumber = 1;  // return to home page - after a delay? (with a countdown?)
-        }
+  if (pageNumber === 16 && keyCode === 80) {
+    if (sendAnswers() === false) {
+      console.log("Tried to print while printer wasn't ready");
+      pageNumber = 17;
+    } else {
+      pageNumber = 1; // don't reset myName here anymore — done after real confirmation
     }
+  }
     // if (keyCode === 82) { // R key to restart without printing
     //   // sendAnswers();
     //   myName = ''; // reset myName for the next user
     //   console.log("myName reset after printing"); // for debugging 
     //   pageNumber = 1;  // return to home page - after a delay? (with a countdown?)
     // }
-  }
   if (keyCode === 67) {
     enableEasterEgg = !enableEasterEgg;
     console.log("Enabled eastereggs");
   }
 
   if (enableEasterEgg && keyCode === 71 && !easterEggCooldown) {
-  if (!easterEggPlaying) {
-    // Start the sound
-    easterEggPlaying = true;
-    console.log("Playing easterEggSound");
+    if (!easterEggPlaying) {
+      // Start the sound
+      easterEggPlaying = true;
+      console.log("Playing easterEggSound");
 
-    loadSound('samenStadskanaal.mp3', (loadedSound) => {
-      easterEggSound = loadedSound;
-      easterEggSound.play();
-    });
-  } else {
-    // Stop the sound immediately
-    console.log("Stopping easterEggSound");
-    if (easterEggSound && easterEggSound.isPlaying()) {
-      easterEggSound.stop();
+      loadSound('samenStadskanaal.mp3', (loadedSound) => {
+        easterEggSound = loadedSound;
+        easterEggSound.play();
+      });
+    } else {
+      // Stop the sound immediately
+      console.log("Stopping easterEggSound");
+      if (easterEggSound && easterEggSound.isPlaying()) {
+        easterEggSound.stop();
+      }
+      easterEggPlaying = false;
+
+      // Start 5-second cooldown before it can be triggered again
+      easterEggCooldown = true;
+      setTimeout(() => {
+        easterEggCooldown = false;
+      }, 5000);
     }
-    easterEggPlaying = false;
-
-    // Start 5-second cooldown before it can be triggered again
-    easterEggCooldown = true;
-    setTimeout(() => {
-      easterEggCooldown = false;
-    }, 5000);
   }
-}
 
   if (enableEasterEgg && keyCode === 73) {
     if (easterEggTriggered) {
@@ -543,19 +539,21 @@ function sendAnswers() {
     }
     if (data.ready) {
       printerReady = true;
+      myName = '';
+      currentName = '';
+      answers = {};
       console.log("Printer is ready again.");
       return;
     }
   })
   .catch(error => {
     console.error("Printer error:", error);
-    setTimeout(
-      () => {printerReady = true},
-      sleeptime
-    )
+    printerReady = true;
     pageNumber = 18;
     return;
   });
+
+  return true;
 
 }
   

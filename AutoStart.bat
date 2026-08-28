@@ -1,7 +1,7 @@
 START "Update repo" /WAIT cmd /c git pull
 
-START "Autostart button" cmd /k "cd button\button\ && node button.js"
-timeout 5
+@REM START "Autostart button" cmd /k "cd button\button\ && node button.js"
+@REM timeout 5
 start "Autostart printer" cmd /k "python server.py"
 timeout 5
 START "Autostart server" cmd /k "npx http-server -p 5503"

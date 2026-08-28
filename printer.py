@@ -6,7 +6,7 @@ import usb.core
 
 logger = logging.getLogger(__name__)
 
-COOLDOWN = 15
+COOLDOWN = 45
 
 def create_printer():
     return Usb(

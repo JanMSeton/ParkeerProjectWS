@@ -19,7 +19,6 @@ import os
 import time
 
 printer = create_printer()
-server_failed = False
 logo_path = "./WS-logo-black.bmp"
 
 # Mapping of answers to specific texts
@@ -31,6 +30,9 @@ logging.basicConfig(
     level=logging.INFO,
     force=True
     )
+
+RECOVERYTIME = 300
+SLEEPTIME = 30
 
 class S(BaseHTTPRequestHandler):
     def _set_response(self):
@@ -64,7 +66,7 @@ class S(BaseHTTPRequestHandler):
         receipt_template = create_receipt(data, yaml_text)
 
         # Print the receipt
-        global printer, server_failed
+        global printer
         try:
             if os.path.exists(logo_path):
                 logo = Image.open(logo_path)
@@ -76,6 +78,7 @@ class S(BaseHTTPRequestHandler):
             print_receipt(printer=printer, receipt_template=receipt_template, logo=logo)
 
         except Exception:
+
             logger.exception(f"Error while printing, recovering...")
             printer = recover_printer(printer=printer)
 
@@ -83,32 +86,50 @@ class S(BaseHTTPRequestHandler):
 
             if printer is None:
                 # Both recovery attempts failed, tell the main server loop to stop accepting requests.
-                server_failed = True
                 response = {
                     "ok": False,
-                    "error": "Printer could not be recovered. Server is stopping. Printing failed"
+                    "error": "FATAL",
+                    "waittime": RECOVERYTIME,
                 }
                 logger.error("Printer could not be recovered. Server will stop.")
+                self.wfile.write(json.dumps(response).encode("utf-8")) 
+                logger.info("Sent response to browser")
+                raise Exception
+            
             else:
                 response = {
                     "ok": False,
-                    "error": "Printer connection lost; printer was reset."
+                    "error": "Printer connection lost; printer was reset.",
+                    "waittime": RECOVERYTIME
                 }
-                logger.info("Printer has been recovered. Server will wait for new request.")
-
-            time.sleep(300)
-            self.wfile.write(json.dumps(response).encode("utf-8")) 
-            return
+                logger.info(f"Printer has been recovered. Server will recover for {RECOVERYTIME}s and wait for new request.")
+                time.sleep(RECOVERYTIME)
+                self.wfile.write(json.dumps(response).encode("utf-8")) 
+                logger.info("Sent response to browser")
+                return
 
         # Only reached when printing succeeded
+        logger.info("Receipt printed successfully.")
+
+        logger.info(f"Waiting {SLEEPTIME} seconds before printer is ready again...")
+        time.sleep(SLEEPTIME)
+        logger.info("Printer is ready again.")
+
         self._set_response()
-        response = {"ok": True}
-        self.wfile.write(json.dumps(response).encode('utf-8'))
+
+        response = {
+            "ok": True,
+            "ready": True,
+            "waittime": SLEEPTIME
+        }
+
+        self.wfile.write(json.dumps(response).encode("utf-8"))
+        logger.info("Sent response to browser")
+
 
 
 
 def run(server_class=HTTPServer, handler_class=S, port=5000):
-    global server_failed
 
     server_address = ('', port)
     httpd = server_class(server_address, handler_class)
@@ -116,9 +137,7 @@ def run(server_class=HTTPServer, handler_class=S, port=5000):
     logger.info("Starting httpd...")
 
     try:
-        while not server_failed:
-            httpd.handle_request()
-
+        httpd.serve_forever()
     except KeyboardInterrupt:
         logger.info("Stopping server...")
 

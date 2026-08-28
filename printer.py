@@ -29,7 +29,7 @@ def recover_printer(printer):
         except Exception:
             pass
 
-        time.sleep(30)
+        time.sleep(5)
 
         printer.open()
 
@@ -45,7 +45,7 @@ def recover_printer(printer):
     logger.info("Recovery attempt 2: creating new USB object.")
 
     try:
-        time.sleep(60)
+        time.sleep(5)
 
         # Ask PyUSB to rediscover the device
         device = usb.core.find(
@@ -84,10 +84,7 @@ def print_receipt(printer, receipt_template, logo):
             p.printer.image(logo)
 
         p.writelines("\n\n")
-        for line in receipt_template.splitlines():
-            p.writelines(line + "\n")
-            time.sleep(1)
-
+        p.writelines(receipt_template)
         if logo:
             p.set(align="center")
             p.printer.image(logo)

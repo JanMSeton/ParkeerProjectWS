@@ -1,5 +1,8 @@
 // Sources and collaborator: P5.js library, ChatGPT, AJ
 
+let printerReady = true
+let sleeptime = 30
+
 //DOM elements. 
 let pageNumber = 1; //start with first page (or another page when testing!). 
 let randomPage1 = null; // Store the randomly chosen page after Page 4
@@ -23,6 +26,10 @@ let currentInput = ''; // Store the current numeric input dynamically
 
 let answersJSON = JSON.stringify(answers);
 console.log(answersJSON); // Example: {"Q1":"2","Q2":"4","Q3":"3"}
+
+function goToPage(n) {
+  pageNumber = constrain(n, 1, pages.length - 2); // or whatever the real cap should be
+}
 
 function setup() {
   createCanvas(900, 700);
@@ -52,6 +59,8 @@ function setup() {
     drawPage14, // Vraag 2
     drawPage15, // Vraag 3
     drawPage16, // Final, print scherm
+    drawWaitingPage,
+    drawErrorPage
     // Add as many as needed
   ];
 }
@@ -62,12 +71,14 @@ function draw() {
   drawPageNavigation(); //Draw page navigation (page numbers, instructions navigation)
   
    // Dynamically call the page function
-   if (pages[pageNumber - 1]) {
-    pages[pageNumber - 1]();
+    if (pages[pageNumber - 1]) {
+      if (styledText) styledText.remove();
+      if (styledInput) styledInput.remove();
+      pages[pageNumber - 1]();
   } else {
-    textAlign(CENTER, CENTER);
-    textSize(24);
-    text("Page Not Found", width / 2, height / 2);
+      textAlign(CENTER, CENTER);
+      textSize(24);
+      text("Page Not Found", width / 2, height / 2);
   }
 
   fill(255); //white text
@@ -76,9 +87,6 @@ function draw() {
 
 
 function drawPage1(){
-  if (styledText) styledText.remove();
-  if (styledInput) styledInput.remove();
-
   //style function with CSS
   styledText = createP(`Welkom bij de World Servants Parkeerautomaat.<br><br>Druk op de blauwe knop om te starten.`);
     // styledText.position(width / 2 - 300, height / 2 - 150); // Adjust position
@@ -87,9 +95,6 @@ function drawPage1(){
 }
 
 function drawPage2(){
-  if (styledText) styledText.remove();
-  if (styledInput) styledInput.remove();
-
   //style function with CSS
   styledText = createP(`Wat is je naam? <br>Typ je naam en druk op enter.`);
   styledText.position(width / 2 - 300, height / 2 - 100); // Adjust position
@@ -105,9 +110,6 @@ function drawPage2(){
 // }
 
 function drawPage3(){
-  if (styledText) styledText.remove();
-  if (styledInput) styledInput.remove();
- 
   //style function with CSS
   styledText = createP(`Hallo ${myName},<br>Beantwoord de volgende vragen zodat jouw Bon van Betekenis opgesteld kan worden. <br><br>Alvast bedankt voor het vertrouwen om je cultuur hier te parkeren.<br><br> Druk op enter.`);
   styledText.position(width / 2 - 300, height / 2 - 100); // Adjust position
@@ -116,17 +118,12 @@ function drawPage3(){
 }
 
 function drawPage4(){
-  if (styledText) styledText.remove();
-
   styledText = createP(`Hierna volgen 3 stellingen. Geef aan of de stelling herkenbaar is voor jouw leven.<br><br>Er zijn geen goede of foute antwoorden. Laten we beginnen!<br><br>Druk op enter.`);
   styledText.position(width / 2 - 300, height / 2 - 100); // Adjust position
   styledText.class("lowlight"); // Assign a CSS class
 }
 
 function drawPage5(){
-  if (styledText) styledText.remove();
-  if (styledInput) styledInput.remove();
-
   styledText = createP(`Stelling:<br>“Mijn gezin bestaat uit een vader, moeder, en misschien broer(s) en zus(sen).”<br><br>1 = niet herkenbaar, 2 = neutraal, 3 = heel herkenbaar.<br><br>Druk op 1, 2 of 3 en op enter.`);
   styledText.position(width / 2 - 300, height / 2 - 100); // Adjust position
   styledText.class("lowlight"); // Assign a CSS class
@@ -137,9 +134,6 @@ function drawPage5(){
 }
 
 function drawPage6(){
-  if (styledText) styledText.remove();
-  if (styledInput) styledInput.remove();
-
   styledText = createP(`Stelling:<br>"Privacy of een momentje voor mezelf? Nee, ik ben altijd met andere mensen.”<br><br>1 = niet herkenbaar, 2 = neutraal, 3 = heel herkenbaar. <br><br> Druk op 1, 2 of 3 en enter.`);
   styledText.position(width / 2 - 300, height / 2 - 100); // Adjust position
   styledText.class("lowlight"); // Assign a CSS class
@@ -150,9 +144,6 @@ function drawPage6(){
 }
 
 function drawPage7(){
-  if (styledText) styledText.remove();
-  if (styledInput) styledInput.remove();
-
   styledText = createP(`Stelling:<br>“Ik vind het belangrijk dat mensen op tijd komen. Als je te laat komt, stuur je een berichtje.”<br><br>1 = niet herkenbaar, 2 = neutraal, 3 = heel herkenbaar. <br><br> Druk op 1, 2 of 3 en enter.`);
   styledText.position(width / 2 - 300, height / 2 - 100); // Adjust position
   styledText.class("lowlight"); // Assign a CSS class
@@ -163,9 +154,6 @@ function drawPage7(){
 }
 
 function drawPage8(){
-  if (styledText) styledText.remove();
-  if (styledInput) styledInput.remove();
-
   styledText = createP(`Stelling:<br>“Als iemand op bezoek komt, doet hij gewoon mee met wat ik aan het doen ben. Bijvoorbeeld grasmaaien of koken.”<br><br>1 = niet herkenbaar, 2 = neutraal, 3 = heel herkenbaar. <br><br> Druk op 1, 2 of 3 en enter.`);
   styledText.position(width / 2 - 300, height / 2 - 100); // Adjust position
   styledText.class("lowlight"); // Assign a CSS class
@@ -176,9 +164,6 @@ function drawPage8(){
 }
 
 function drawPage9(){
-  if (styledText) styledText.remove();
-  if (styledInput) styledInput.remove();
-
   styledText = createP(`Stelling:<br>“Ik voel me altijd vrij om aan te sluiten wanneer mensen alleen of met twee zijn.”<br><br>1 = niet herkenbaar, 2 = neutraal, 3 = heel herkenbaar. <br><br> Druk op 1, 2 of 3 en enter.`);
   styledText.position(width / 2 - 300, height / 2 - 100); // Adjust position
   styledText.class("lowlight"); // Assign a CSS class
@@ -189,9 +174,6 @@ function drawPage9(){
 }
 
 function drawPage10(){
-  if (styledText) styledText.remove();
-  if (styledInput) styledInput.remove();
-
   styledText = createP(`Stelling:<br>“Mijn opa, oma, neefjes, nichtjes, ooms en/of tantes wonen bij ons thuis.”<br><br>1 = niet herkenbaar, 2 = neutraal, 3 = heel herkenbaar. <br><br> Druk op 1, 2 of 3 en enter.`);
   styledText.position(width / 2 - 300, height / 2 - 100); // Adjust position
   styledText.class("lowlight"); // Assign a CSS class
@@ -202,9 +184,6 @@ function drawPage10(){
 }
 
 function drawPage11(){
-  if (styledText) styledText.remove();
-  if (styledInput) styledInput.remove();
-
   styledText = createP(`Stelling:<br>“Ik wil niet tot last zijn als ik op bezoek ga. Ik sla de koffie of thee af als niemand neemt.”<br><br>1 = niet herkenbaar, 2 = neutraal, 3 = heel herkenbaar. <br><br> Druk op 1, 2 of 3 en op enter.`);
   styledText.position(width / 2 - 300, height / 2 - 100); // Adjust position
   styledText.class("lowlight"); // Assign a CSS class
@@ -215,18 +194,12 @@ function drawPage11(){
 }
 
 function drawPage12(){
-  if (styledText) styledText.remove();
-  if (styledInput) styledInput.remove();
-
   styledText = createP(`Dat waren de stellingen. Hierna volgen 2 vragen. Onthoud: er zijn geen goede of foute antwoorden.<br><br> Druk op enter.`);
   styledText.position(width / 2 - 300, height / 2 - 100); // Adjust position
   styledText.class("lowlight"); // Assign a CSS class
 }
 
 function drawPage13(){
-  if (styledText) styledText.remove();
-  if (styledInput) styledInput.remove();
-
   styledText = createP(`Vraag:<br>Welke smiley beschrijft de schaduwkant van het leven voor jou? <br>A= :)<br>B= :|<br>C= :( <br><br> Druk op A, B, of C en druk op enter.`);
   styledText.position(width / 2 - 300, height / 2 - 100); // Adjust position
   styledText.class("lowlight"); // Assign a CSS class
@@ -237,9 +210,6 @@ function drawPage13(){
 }
 
 function drawPage14(){
-  if (styledText) styledText.remove();
-  if (styledInput) styledInput.remove();
-
   styledText = createP(`Vraag:<br>Hoe vaak per dag vind jij iets gek of gaat iets anders dan je gewend bent?<br><br>Voer een getal in en druk op enter.`);
   styledText.position(width / 2 - 300, height / 2 - 100); // Adjust position
   styledText.class("lowlight"); // Assign a CSS class
@@ -250,9 +220,6 @@ function drawPage14(){
 }
 
 function drawPage15(){
-  if (styledText) styledText.remove();
-  if (styledInput) styledInput.remove();
-
   styledText = createP(`Vraag:<br>Hoe vaak per dag frons jij je wenkbrauwen? <br><br> Voer een getal in en druk op enter.`);
   styledText.position(width / 2 - 300, height / 2 - 100); // Adjust position
   styledText.class("lowlight"); // Assign a CSS class
@@ -263,13 +230,24 @@ function drawPage15(){
 }
 
 function drawPage16(){
-  if (styledText) styledText.remove();
-  if (styledInput) styledInput.remove();
-
   styledText = createP(`Dank je wel voor het parkeren van je cultuur. Vergeet je bon niet! <br><br> Druk op P om te printen.`);
   styledText.position(width / 2 - 300, height / 2 - 100); // Adjust position
   styledText.class("lowlight"); // Assign a CSS class
 // additional feature: text [cultuurparkeerplaats]: "Deze reizigers voor jou hebben hun cultuur geparkeerd: ...""
+}
+
+function drawWaitingPage() { // page 17
+  styledText = createP(`De printer is nog niet klaar om je bon uit te printen. Wacht nog even, dit duurt ongeveer ${sleeptime} seconden.`)
+  styledText.position(width / 2 - 200, 550); 
+  styledText.class("lowlightSmall");
+  setTimeout(() => {pageNumber = 16},
+    5 * 1000)
+}
+
+function drawErrorPage() { // page 18
+  styledText = createP(`Er is iets verkeerd gegaan, waarschijnlijk is de printer vastgelopen :(`)
+  styledText.position(width / 2 - 200, 550); 
+  styledText.class("lowlightSmall");
 }
 
 //Instructions for navigation
@@ -287,16 +265,17 @@ document.addEventListener("keydown", function(event) {
   const key = event.key;
   const keyCode = event.keyCode;
 
+
   // Handle navigation for page change (arrows, Enter)
   if (keyCode === 37) { // Left Arrow Key (back)
-    pageNumber = constrain(pageNumber - 1, 1, pages.length); // Go to previous page
+    goToPage(pageNumber - 1); // Go to previous page
     event.preventDefault(); // Prevent default behavior of the key
     console.log("Navigating to page: " + pageNumber); // Debugging log for page navigation
   } 
   else if (keyCode === 39 ) { // Right Arrow key (forward)
     // else if (keyCode === 13 ||keyCode === 39 ) { // Enter Key and Right Arrow key
     saveName();
-    pageNumber = constrain(pageNumber + 1, 1, pages.length); // Go to next page
+    goToPage(pageNumber + 1); // Go to next page
     event.preventDefault(); // Prevent default behavior of the key
     console.log(`Confirmed answer for Q${pageNumber - 1}: ${currentInput}`);
     console.log("Navigating to page: " + pageNumber); // Debugging log for page navigation
@@ -334,24 +313,24 @@ document.addEventListener("keydown", function(event) {
         console.log("Random Page 1:", randomPage1, "Random Page 2:", randomPage2, "Random Page 3:", randomPage3);
 
         // Navigate to the first random page and  wait for the next key press (waiting=true)
-        pageNumber = randomPage1;
+        goToPage(randomPage1);
         waitingForNextRandomPage1 = true;
         currentInput = ''; // Reset input for the next page
       }
        else if (pageNumber === randomPage1) {
-        pageNumber = randomPage2
+        goToPage(randomPage2);
         // Update state to indicate the second random page was reached
         waitingForNextRandomPage1 = false;
         currentInput = ''; // Reset input for the next page
 
       } else if (pageNumber === randomPage2) {
-        pageNumber = randomPage3
+        goToPage(randomPage3);
         // Update state to indicate the second random page was reached
         waitingForNextRandomPage1 = false;
         currentInput = ''; // Reset input for the next page
 
       } else if (pageNumber === randomPage3) {
-        pageNumber = 12;
+        goToPage(12);
         // Reset random pages for future runs
         randomPage1 = null;
         randomPage2 = null;
@@ -368,19 +347,19 @@ document.addEventListener("keydown", function(event) {
       randomPage5 = random(possiblePagesQuestions.filter(page => page !== randomPage4))  
       
       // Navigate to the first random page
-      pageNumber = randomPage4;
+      goToPage(randomPage4);
 
       // Set state to wait for the next key press
       waitingForNextRandomPage2 = true;
       currentInput = ''; // Reset input for the next page
 
     } else if (pageNumber === randomPage4) {
-      pageNumber = randomPage5
+      goToPage(randomPage5);
       // Update state to indicate the second random page was reached
       waitingForNextRandomPage2 = true;
       currentInput = ''; // Reset input for the next page
     } else if (pageNumber === randomPage5) {
-      pageNumber = 16;
+      goToPage(16);
       // Reset random pages for future runs
       randomPage4 = null;
       randomPage5 = null;
@@ -389,13 +368,13 @@ document.addEventListener("keydown", function(event) {
     } else {
       // Normal navigation: save input and move to the next page
       saveName(); // Save current input
-      pageNumber = constrain(pageNumber + 1, 1, pages.length);
+      goToPage(pageNumber + 1);
       currentInput = ''; // Reset input for the next page
   }
   event.preventDefault();  
   console.log(`Confirmed answer for Q${pageNumber - 1}: ${currentInput}`);
   // console.log("Random Page 1:", randomPage1, "Random Page 2:", randomPage2, "Random Page 3:", randomPage3);
-  console.log("Current page:", pageNumber);
+  console.log("Current page", pageNumber);
   console.log("Waiting for next random page(statements):", waitingForNextRandomPage1);
 }
   
@@ -439,19 +418,23 @@ document.addEventListener("keydown", function(event) {
     }
 
   // Trigger sending answers (P key) but only if at the final page
-  if (pageNumber === 16){
-  if (keyCode === 80) { // P key
-    sendAnswers();
-    myName = ''; // reset myName for the next user --> wat als ik dit op pagina 1 zet?
-    console.log("myName reset after printing"); // for debugging 
-    pageNumber = 1;  // return to home page - after a delay? (with a countdown?)
-  }
-  // if (keyCode === 82) { // R key to restart without printing
-  //   // sendAnswers();
-  //   myName = ''; // reset myName for the next user
-  //   console.log("myName reset after printing"); // for debugging 
-  //   pageNumber = 1;  // return to home page - after a delay? (with a countdown?)
-  // }
+  if (pageNumber === 16) {
+    if (keyCode === 80) { // P key
+        if (sendAnswers() === false) {
+          console.log("Tried to print while printer wasnt ready")
+          pageNumber = 17
+        } else {
+          myName = ''; // reset myName for the next user --> wat als ik dit op pagina 1 zet?
+          console.log("myName reset after printing"); // for debugging 
+          pageNumber = 1;  // return to home page - after a delay? (with a countdown?)
+        }
+    }
+    // if (keyCode === 82) { // R key to restart without printing
+    //   // sendAnswers();
+    //   myName = ''; // reset myName for the next user
+    //   console.log("myName reset after printing"); // for debugging 
+    //   pageNumber = 1;  // return to home page - after a delay? (with a countdown?)
+    // }
 }
 });
 
@@ -472,6 +455,11 @@ function sendAnswers() {
     myName: myName,
     answers: answers
   };
+  if (printerReady === false) {
+    return false;
+  }
+
+  printerReady = false;
   // let answersJSON = JSON.stringify(answers);
 
   fetch("http://127.0.0.1:5000/submit", {
@@ -483,11 +471,33 @@ function sendAnswers() {
     // body: answersJSON,
   })
   .then(response => response.json())
-  .then(data => console.log("Success:", data))
-  .catch(error => console.error("Error:", error));
+  .then(data => {
+    console.log("Printer response:", data);
+    if (data.error === "FATAL") {
+      // The python server has died, we must restart both scripts
+      console.error("FATAL: printer server needs manual restart");
+      printerReady = false;
+      pageNumber = 18;
+      return;
+    }
+    if (data.ready) {
+      printerReady = true;
+      console.log("Printer is ready again.");
+      return;
+    }
+  })
+  .catch(error => {
+    console.error("Printer error:", error);
+    if (error === "FATAL") {
+      // The python server has died, we must restart both scripts
+      throw new Error(error);
+    }
+    setTimeout(
+      () => {printerReady = true},
+      sleeptime
+    )
+    return;
+  });
 
 }
   
-
-
-

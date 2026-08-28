@@ -3,8 +3,10 @@
 python3 -u server.py &
 PRINTER_PID=$!
 
-npx http-server -p 5503 &
+npx http-server -p 5503 -c-1 &
 HTTP_PID=$!
+
+sleep 5
 
 firefox http://127.0.0.1:5503/ --no-first-run &
 FIREFOX_PID=$!

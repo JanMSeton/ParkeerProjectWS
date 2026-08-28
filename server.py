@@ -75,8 +75,8 @@ class S(BaseHTTPRequestHandler):
                 logger.warning(
                 f"Logo not found: {logo_path}. Printing receipt without logo."
             )
-            for _ in range(10):
-                printer.print_receipt(printer=p, receipt_template=receipt_template, logo=logo)
+            
+            printer.print_receipt(printer=p, receipt_template=receipt_template, logo=logo)
 
         except Exception:
 

@@ -1,3 +1,5 @@
+START "Update repo" /WAIT cmd /c git pull
+
 START "Autostart button" cmd /k "cd button\button\ && node button.js"
 timeout 5
 start "Autostart printer" cmd /k "python server.py"

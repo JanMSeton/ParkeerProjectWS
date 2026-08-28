@@ -6,6 +6,8 @@ import usb.core
 
 logger = logging.getLogger(__name__)
 
+COOLDOWN = 15
+
 def create_printer():
     return Usb(
         idVendor=0x28e9,
@@ -88,5 +90,5 @@ def print_receipt(printer, receipt_template, logo):
         if logo:
             p.set(align="center")
             p.printer.image(logo)
-    time.sleep(15)
+    time.sleep(COOLDOWN)
     logger.info("Receipt print job completed.")

@@ -13,12 +13,13 @@ import logging
 import json
 import yaml
 from PIL import Image
-from printer import *
-from receipt import *
 import os
 import time
 
-printer = create_printer()
+import printer
+import receipt
+
+p = printer.create_printer()
 logo_path = "./WS-logo-black.bmp"
 
 # Mapping of answers to specific texts
@@ -32,7 +33,6 @@ logging.basicConfig(
     )
 
 RECOVERYTIME = 300
-SLEEPTIME = 30
 
 class S(BaseHTTPRequestHandler):
     def _set_response(self):
@@ -63,10 +63,10 @@ class S(BaseHTTPRequestHandler):
         body = post_data.decode('utf-8')
         data = json.loads(body)
 
-        receipt_template = create_receipt(data, yaml_text)
+        receipt_template = receipt.create_receipt(data, yaml_text)
 
         # Print the receipt
-        global printer
+        global p
         try:
             if os.path.exists(logo_path):
                 logo = Image.open(logo_path)
@@ -75,16 +75,17 @@ class S(BaseHTTPRequestHandler):
                 logger.warning(
                 f"Logo not found: {logo_path}. Printing receipt without logo."
             )
-            print_receipt(printer=printer, receipt_template=receipt_template, logo=logo)
+            for _ in range(10):
+                printer.print_receipt(printer=p, receipt_template=receipt_template, logo=logo)
 
         except Exception:
 
             logger.exception(f"Error while printing, recovering...")
-            printer = recover_printer(printer=printer)
+            p = printer.recover_printer(printer=p)
 
             self._set_response()
 
-            if printer is None:
+            if p is None:
                 # Both recovery attempts failed, tell the main server loop to stop accepting requests.
                 response = {
                     "ok": False,
@@ -100,7 +101,7 @@ class S(BaseHTTPRequestHandler):
                 response = {
                     "ok": False,
                     "error": "Printer connection lost; printer was reset.",
-                    "waittime": RECOVERYTIME
+                    "cooldown": RECOVERYTIME
                 }
                 logger.info(f"Printer has been recovered. Server will recover for {RECOVERYTIME}s and wait for new request.")
                 time.sleep(RECOVERYTIME)
@@ -111,8 +112,8 @@ class S(BaseHTTPRequestHandler):
         # Only reached when printing succeeded
         logger.info("Receipt printed successfully.")
 
-        logger.info(f"Waiting {SLEEPTIME} seconds before printer is ready again...")
-        time.sleep(SLEEPTIME)
+        logger.info(f"Waiting {printer.COOLDOWN} seconds before printer is ready again...")
+        time.sleep(printer.COOLDOWN)
         logger.info("Printer is ready again.")
 
         self._set_response()
@@ -120,7 +121,7 @@ class S(BaseHTTPRequestHandler):
         response = {
             "ok": True,
             "ready": True,
-            "waittime": SLEEPTIME
+            "cooldown": printer.COOLDOWN
         }
 
         self.wfile.write(json.dumps(response).encode("utf-8"))

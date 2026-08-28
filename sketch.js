@@ -1,7 +1,13 @@
 // Sources and collaborator: P5.js library, ChatGPT, AJ
 
-let printerReady = true
-let sleeptime = 30
+let printerReady = true;
+let cooldown = 30;
+let enableEasterEgg = false;
+let easterEggSound = null;
+let easterEggImg = null;
+let easterEggTriggered = false;
+let easterEggPlaying = false;
+let easterEggCooldown = false;
 
 //DOM elements. 
 let pageNumber = 1; //start with first page (or another page when testing!). 
@@ -237,7 +243,7 @@ function drawPage16(){
 }
 
 function drawWaitingPage() { // page 17
-  styledText = createP(`De printer is nog niet klaar om je bon uit te printen. Wacht nog even, dit duurt ongeveer ${sleeptime} seconden.`)
+  styledText = createP(`De printer is nog niet klaar om je bon uit te printen. Wacht nog even, dit duurt ongeveer ${cooldown} seconden.`)
   styledText.position(width / 2 - 200, 550); 
   styledText.class("lowlightSmall");
   setTimeout(() => {pageNumber = 16},
@@ -245,7 +251,7 @@ function drawWaitingPage() { // page 17
 }
 
 function drawErrorPage() { // page 18
-  styledText = createP(`Er is iets verkeerd gegaan, waarschijnlijk is de printer vastgelopen :(`)
+  styledText = createP(`Er is iets verkeerd gegaan, waarschijnlijk is de printer vastgelopen :( <br><br> Druk op Enter om naar de startpagina te gaan`)
   styledText.position(width / 2 - 200, 550); 
   styledText.class("lowlightSmall");
 }
@@ -336,7 +342,9 @@ document.addEventListener("keydown", function(event) {
         randomPage2 = null;
         randomPage3 = null;
         currentInput = ''; // Reset input for the next page     
-      } 
+      } else if (pageNumber === 18) {
+        goToPage(1)
+      }
       
     //hieronder is test
     else if (pageNumber === 12 && randomPage4 === null && randomPage5 === null) { 
@@ -435,7 +443,59 @@ document.addEventListener("keydown", function(event) {
     //   console.log("myName reset after printing"); // for debugging 
     //   pageNumber = 1;  // return to home page - after a delay? (with a countdown?)
     // }
+  }
+  if (keyCode === 67) {
+    enableEasterEgg = !enableEasterEgg;
+    console.log("Enabled eastereggs");
+  }
+
+  if (enableEasterEgg && keyCode === 71 && !easterEggCooldown) {
+  if (!easterEggPlaying) {
+    // Start the sound
+    easterEggPlaying = true;
+    console.log("Playing easterEggSound");
+
+    loadSound('samenStadskanaal.mp3', (loadedSound) => {
+      easterEggSound = loadedSound;
+      easterEggSound.play();
+    });
+  } else {
+    // Stop the sound immediately
+    console.log("Stopping easterEggSound");
+    if (easterEggSound && easterEggSound.isPlaying()) {
+      easterEggSound.stop();
+    }
+    easterEggPlaying = false;
+
+    // Start 5-second cooldown before it can be triggered again
+    easterEggCooldown = true;
+    setTimeout(() => {
+      easterEggCooldown = false;
+    }, 5000);
+  }
 }
+
+  if (enableEasterEgg && keyCode === 73) {
+    if (easterEggTriggered) {
+      console.log("Removing picture");
+      easterEggImg.remove();
+      easterEggTriggered = false;
+    } else {
+      easterEggTriggered = true;
+      console.log("Showing easterEggPicture");
+      easterEggImg = createImg('impactID.png', 'easter egg');
+      easterEggImg.size(width, height);   // match canvas size, or pick your own
+      easterEggImg.position(0, 0);        // position over the canvas
+      easterEggImg.style('z-index', '10'); // make sure it renders on top
+      easterEggImg.style('background-color', 'white');
+
+      setTimeout(() => {
+        easterEggImg.remove(); // takes it away after 3 seconds
+        easterEggTriggered = false;
+      }, 3000);
+    }
+
+  }
 });
 
 function startProgramma () {
@@ -473,8 +533,9 @@ function sendAnswers() {
   .then(response => response.json())
   .then(data => {
     console.log("Printer response:", data);
+    cooldown = data.cooldown
     if (data.error === "FATAL") {
-      // The python server has died, we must restart both scripts
+      // The python server has died, we must restart it before we can continue
       console.error("FATAL: printer server needs manual restart");
       printerReady = false;
       pageNumber = 18;
@@ -488,14 +549,11 @@ function sendAnswers() {
   })
   .catch(error => {
     console.error("Printer error:", error);
-    if (error === "FATAL") {
-      // The python server has died, we must restart both scripts
-      throw new Error(error);
-    }
     setTimeout(
       () => {printerReady = true},
       sleeptime
     )
+    pageNumber = 18;
     return;
   });
 

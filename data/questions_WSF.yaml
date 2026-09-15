@@ -1,0 +1,44 @@
+---
+pages:
+- text: 'World Servants Parkeerautomaat<br><br>Druk op ENTER om te starten.'
+
+- text: 'Wat is je naam?<br>Typ je naam en druk op enter.'
+  input: "Mijn naam is ${myName}"
+  property: 'enterName'
+
+- text: 'In welk land ben je op project geweest deze zomer?<br>Type het land en druk op enter.'
+  input: 'Ik ben in ${myCountry} geweest.'
+  property: 'enterCountry'
+
+- text: 'Welkom, ${myName}<br><br>Afgelopen zomer ben je op project geweest. Dat was vast een bijzondere ervaring. Je hebt kennis gemaakt met een andere cultuur.<br>Door de volgende vragen te beantwoorden parkeer je hier tijdelijk je cultuur. Je krijgt een Bon van Betekenis terug en deze zal je helpen om je projectervaringen mee te nemen.<br><br>Druk op enter.'
+
+- text: '${myName}, laten we terugkijken naar jouw ervaringen op project in ${myCountry}.<br>Beantwoord de volgende vragen.<br><br>Druk op enter.'
+
+- text: 'Vraag (1/3)<br>Omschrijf in 1 woord of een korte zin wat je wil onthouden of meenemen van de cultuur in ${myCountry}.<br><br>Type je antwoord en druk op enter.'
+  input: 'Jouw antwoord: ${currentInput}'
+  property: 'stringInput'
+
+- text: 'Vraag (2/3)<br>Omschrijf in 1 woord of een korte zin een bijzondere interactie met iemand uit ${myCountry}.<br><br>Type je antwoord en druk op enter.'
+  input: 'Jouw antwoord: ${currentInput}'
+  property: "stringInput"
+
+- text: 'Vraag (3/3)<br>Omschrijf in 1 woord of een korte zin wat je hebt geleerd of ontdekt over jezelf.<br><br>Type je antwoord en druk op enter.'
+  input: 'Jouw antwoord: ${currentInput}'
+  property: 'stringInput'
+
+- text: 'Goed bezig ${myName}. Nu volgen drie stellingen.<br>Druk op enter om door te gaan.'
+
+- text: 'Stelling (1/3)<br>"Ik ben me meer bewust van mijn eigen cultuur door het project in ${myCountry}."<br><br>1 = oneens, 2 = neutraal, 3 = eens.<br><br>Druk op 1, 2 of 3 en enter.'
+  input: 'Jouw antwoord: ${currentInput}'
+  property: 'oneTwoThreeInput'
+
+- text: 'Stelling (2/3)<br>"Ik sta meer open voor een andere cultuur door de interacties in ${myCountry}."<br><br>1 = oneens, 2 = neutraal, 3 = eens.<br><br>Druk op 1, 2 of 3 en enter.'
+  input: 'Jouw antwoord: ${currentInput}'
+  property: 'oneTwoThreeInput'
+
+- text: 'Stelling (3/3)<br>"Ik ben me meer bewust van mijn eigen cultuur door de interacties in ${myCountry}."<br><br>1 = oneens, 2 = neutraal, 3 = eens.<br><br>Druk op 1, 2 of 3 en enter.'
+  input: 'Jouw antwoord: ${currentInput}'
+  property: 'oneTwoThreeInput'
+
+- text: 'Dank je wel! Druk op P om je bonnetje te printen. Bewaar je Bon van Betekenis goed en gebruik het om af en toe terug te denken aan je project.'
+  property: 'final'

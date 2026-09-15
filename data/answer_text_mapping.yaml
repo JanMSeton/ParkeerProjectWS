@@ -1,0 +1,130 @@
+---
+answer_text_mapping:
+  "Q5": #skipped
+    "1": "Bijvoorbeeld wie er tot je gezin behoort. Voor jou zijn dat je vader, moeder en broers/zussen. Voor mensen uit culturen met een collectieve identiteit is het gebruikelijk om ook samen te wonen met tantes, ooms, grootouders, etc.\n"
+    "2": "Bijvoorbeeld wie er tot je gezin behoort. Voor sommige mensen is dat alleen hun kerngezin (ouders en broers/zussen) en voor anderen hun uitgebreidere gezin (met tantes, ooms, grootouders etc.).\n"
+    "3": "Bijvoorbeeld wie er tot je gezin behoort. Voor jou zijn dat je vader, moeder, broers/zussen, tantes, ooms, grootouders etc. Voor mensen die individualistisch zijn opgegroeid is dat niet vanzelfsprekend.\n"
+  "Q6":
+    "1": "Privacy: Privacy is voor jou best belangrijk. Je vindt het fijn om je even te kunnen terugtrekken, alleen of met een select gezelschap. Sommige mensen, vooral uit warmere klimaten, zijn gericht op de groep en beschouwen het als onbeleefd om anderen buiten te sluiten in een gesprek of activiteit.\n"
+    "2": "Privacy: Sommige mensen, vooral uit koudere klimaten, zijn meer gesteld op privacy, tijd en ruimte voor zichzelf. Anderen, vooral uit warmere klimaten, zijn gericht op de groep en beschouwen het als onbeleefd om anderen buiten te sluiten. Het is belangrijk om je hiervan bewust te zijn in multiculturele situaties.\n"
+    "3": "Privacy:Jij ervaart het misschien als vanzelfsprekend om deel te nemen aan een gesprek of activiteit. Sommige mensen, vooral uit koudere klimaten, zijn meer gesteld op privacy, tijd en ruimte voor zichzelf.\n"
+  "Q7": 
+    "1": "Tijd: Mogelijk ben jij gericht op relaties en gebeurtenissen, en heb je een voelende persoonlijkheid. Het is voor jou belangrijker om een goede relatie met mensen te onderhouden dan op tijd komen. In andere culturen kunnen mensen meer taakgericht zijn, waardoor het belangrijk is dat mensen op tijd komen.\n"
+    "2": "Tijd: Als je niet zo strak op de tijd zit, kan je waarschijnlijk goed opschieten met zowel mensen die taakgericht zijn als mensen die relatiegericht zijn.\n"
+    "3": "Tijd: Mogelijk ben jij taakgericht, efficient en zie jij een taak als prioriteit. Je vindt het namelijk belangrijk dat mensen op tijd komen. In andere culturen kunnen mensen meer gericht op relaties en gebeurtenissen zijn, en daardoor minder prioriteit geven aan de taak van op tijd komen.\n"
+  "Q8":
+    "1": "Bezoek: Waarschijnlijk kom je uit een koud-klimaat cultuur als tijdens een bezoek alle andere activiteiten gestopt worden, bijvoorbeeld het grasmaaien of koken. Dat zijn geplande bezoekjes. Kijk niet gek op als mensen uit warmere klimaten het normaal vinden om mee te draaien met wat er gebeurt!\n"
+    "2": "Bezoek: Mensen kunnen erg verschillen in spontane of geplande bezoekjes en wat er van hen verwacht wordt tijdens een bezoek. Vind jij het bijvoorbeeld normaal om mee te draaien met wat er gebeurt of verwacht je dat de dagelijkse bezigheden gestopt worden?\n"
+    "3": "Bezoek: Waarschijnlijk hecht je waarde aan ongedwongen en spontane relaties. Je doet gewoon mee in de dagelijkse activiteiten die gebeuren, zoals grasmaaien of koken. Kijk niet gek op als mensen uit koudere klimaten liever iets willen plannen!\n."
+
+  "Q9": #skipped
+    "1": ""
+    "2": ""
+    "3": ""
+
+  "Q10": 
+    "1": "Gezin: Voor jou zijn dat je vader, moeder en broers/zussen. Voor mensen uit culturen met een collectieve identiteit is het gebruikelijk om ook samen te wonen met tantes, ooms, grootouders, en soms nog meer mensen.\n"
+    "2": "Gezin: Voor sommige mensen is dat alleen hun kerngezin (ouders en broers/zussen) en voor anderen hun uitgebreidere gezin (met tantes, ooms, grootouders etc.).\n"
+    "3": "Gezin: Voor jou zijn dat je vader, moeder, broers/zussen, tantes, ooms, grootouders en misschien nog meer. Voor mensen die individualistisch zijn opgegroeid is dat niet vanzelfsprekend.\n"
+
+  "Q11": 
+    "1": "Gastvrijheid: Gastvrijheid verschilt per cultuur. Mensen zijn bijvoorbeeld spontaan en altijd welkom, terwijl in andere culturen verwacht de gastheer/-vrouw dat ze vooraf ingelicht worden. Houd er rekening mee dat de gastheer/-vrouw je de volle aandacht wil geven tijdens een zorgvuldig gepland bezoek.\n"
+    "2": "Gastvrijheid: Gastvrijheid verschilt per cultuur. Mensen zijn bijvoorbeeld spontaan en altijd welkom, maar in andere culturen verwacht de gastheer/-vrouw dat ze vooraf ingelicht worden. Houd er rekening mee dat een bezoek anders wordt ervaren afhankelijk van iemands cultuur en gewoontes.\n"
+    "3": "Gastvrijheid: Gastvrijheid verschilt per cultuur. Mensen zijn bijvoorbeeld spontaan en altijd welkom, terwijl in andere culturen verwacht de gastheer/-vrouw dat ze vooraf ingelicht worden. Houd er rekening mee dat je gewoon meedraait in de activiteiten van de gastheer/-vrouw tijdens een spontaan bezoek.\n"
+
+
+  "Q13": #A, B, C. Vraag 1 
+    "a": |
+
+      -----------------------------
+      
+      Jij vindt :), het blije gezicht, het beste passen bij de schaduwzijde van het leven. Misschien denk je wel dat iedereen dat denkt. Je antwoord kan te maken hebben met cultuur: mensen afkomstig uit landen met koudere klimaten associeren schaduw vaker met iets negatiefs. Mensen uit een warmer klimaat antwoorden vaker een blij gezicht, omdat zij schaduw ervaren als verkoelend en dus als positief.
+      
+
+    "b": |
+
+      -----------------------------
+      
+      Jij vindt :|, het neutrale gezicht, het beste passen bij de schaduwzijde van het leven. Misschien ervaar je het soms als positief en soms als negatief, of vond je het een moeilijke vraag. Wist je dat mensen afkomstig uit landen met koudere klimaten schaduw sneller associeren met iets negatiefs en iemand uit een warmer klimaat associeert schaduw sneller met verkoeling en dus als positief.
+      
+
+    "c": |
+
+      -----------------------------
+
+      Jij vindt :(, het verdrietige gezicht, het beste passen bij de schaduwzijde van het leven. Misschien denk je wel dat iedereen dat denkt. Je antwoord kan te maken hebben met cultuur: mensen afkomstig uit landen met koudere klimaten associeren schaduw vaker met iets negatiefs. Mensen uit een warmer klimaat antwoorden vaker een blij gezicht, omdat zij schaduw ervaren als verkoelend en dus als positief.
+      
+
+dynamic_responses:
+  "Q14": #getal. Vraag 2
+    "default": |
+
+      -----------------------------
+      
+      Jij vindt ongeveer {answer} keer per dag iets gek.
+      Als je op reis bent, zal dit waarschijnlijk veel vaker zijn. Op reis ver van huis ervaar je vaak eerst een cultuurshock, een soort culturele disorientatie. Daarna kan je cultuurstress ervaren. Dat is een langer proces wat van je verwacht dat je je aanpast, dit kan erg vermoeiend zijn. Oefen thuis door eens andere keuzes dan normaal te maken. Bijvoorbeeld naar een andere supermarkt of een andere route fietsen. Kost het meer energie? Misschien. Maar, ben je meer in het moment? Hopelijk wel! Neem dit mee als je nieuwe dingen ervaart en tegenkomt tijdens je project.
+
+
+  "Q15": #getal. Vraag 3
+    "default": |
+
+      -----------------------------
+      
+      Jij fronst ongeveer {answer} keer per dag met je wenkbrauwen. Let de rest van de dag eens op hoe vaak je (onbewust of bewust) fronst. Is het meer dan je verwacht?
+
+      Opdracht: Frons een paar keer met je wenkbrauwen. Voor extra effect: kijk in de spiegel of naar iemand anders als je fronst. 
+      Hoe voelt dat? Wat ervaar je en wat doet het met je?
+      
+      Je wenkbrauwen fronsen wanneer je iets gek vindt of er gebeurt iets wat je niet gewend bent. Met het fronsen trek je ook snel een oordeel. 
+
+      Probeer situaties niet te begrijpen met de kennis die je hebt. Die kennis past namelijk bij je eigen cultuur en gewoontes. Probeer daarom de kennis te vinden die past bij de situatie en mensen. Dat doe je door open vragen te stellen: hoe, waarom, waardoor?
+
+      Wanneer je je wenkbrauwen voelt fronsen, wees dan nieuwsgierig en stel open vragen!
+      
+receipt_template:
+  "header" : |
+    Bewaar dit bonnetje goed en herhaal regelmatig om het parkeren van je cultuur te verlengen.
+    
+    -----------------------------
+
+    Voordat je op project gaat en een gemeenschap met een heel andere cultuur gaat ontmoeten, is het belangrijk om je bewust te zijn dat je ook een eigen cultuur meedraagt. Je opvoeding, omgeving, gewoontes, normen en waarden beinvloeden namelijk je denken en gedragingen. Laten we eens kijken wat jij antwoordde op de stellingen.
+
+  "footer": |
+    
+    
+    -----------------------------
+
+    Elke cultuur is aangeleerd en wordt gevormd door veel factoren. Cultuur is daarom relatief en verschilt van persoon tot persoon. Bespreek eens met projectgenoten en een bewoner in het projectland wat hun gewoontes of normen zijn rondom privacy, familie, relaties, spontaniteit, op bezoek gaan of tijd.
+    Wat zijn de verschillen en overeenkomsten tussen jullie (persoonlijke) culturen?
+    
+    Schrijf hieronder dingen uit jouw achtergrond die invloed kunnen hebben op je ervaringen in het projectland, bijvoorbeeld dingen die voor jou normaal zijn:
+    
+    ..........................
+    
+    ..........................
+    
+    ..........................
+    
+    ..........................
+    
+    ..........................
+    
+    Verandert jouw "normaal" tijdens het project? Denk daar regelmatig over na. 
+    
+    -----------------------------
+
+    Beschouw het leren over een andere cultuur als een ontmoeting. Dat is neutraal en zonder oordeel. Hiervoor moet je bewust in het moment zijn. 
+    
+
+    Je kan deze ontmoetingen trainen door de 54321-oefening. Benoem
+
+    5 dingen die je ziet, 
+    4 dingen die je hoort,
+    3 dingen die je voelt,
+    2 dingen die je ruikt,
+    1 ding wat je proeft.
+    
+    -----------------------------
+
+    Bedankt voor het parkeren van je cultuur
+

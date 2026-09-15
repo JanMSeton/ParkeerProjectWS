@@ -1,0 +1,91 @@
+flow: festival
+
+# Questions that contain the three reflection statements.
+# Change these IDs if your new frontend uses different question numbers.
+statement_questions:
+  - "Q4"
+  - "Q5"
+  - "Q6"
+
+# The three open questions used in the receipt.
+memory_questions:
+  culture: "Q1"
+  interaction: "Q2"
+  self: "Q3"
+
+score_feedback:
+  "3-4": "Dit project heeft niet zo veel bijgedragen aan jouw culturele competentie."
+  "5-6": "Super! Jij hebt redelijk veel culturele competentie ontwikkeld door het project."
+  "7-9": "Wauw! Jij hebt veel culturele competentie ontwikkeld. Je bent je bewust van je eigen cultuur en staat open voor andere culturen."
+
+quotes:
+  - "Het verschil tussen onkruid en een bloem is een oordeel."
+  - "Oordeel niet, verwonder je slechts."
+  - "Cultuur is geen kwestie van goed of fout, maar anders."
+
+receipt_template:
+  header: |
+    Bon
+    van betekenis van {myName}
+
+    {dateTime}
+
+    -----------------------------
+
+    Dit is jouw Bon van Betekenis om de culturele interacties en ervaringen
+    in {projectCountry} te onthouden.
+
+
+    -----------------------------
+
+    Deze zomer heb je veel mensen ontmoet in {projectCountry}. Waarschijnlijk
+    zijn dit mensen met een heel ander leven dan jij. Je hebt je vast af en
+    toe verbaasd of je afgevraagd waarom iets gebeurde zoals het gebeurde.
+    Vaak zit achter zulke gebeurtenissen een logische reden.
+    Hopelijk heb je ook antwoorden gekregen op deze waarom gebeurt dit
+    zo-vragen!
+
+    -----------------------------
+
+    De volgende projectherinneringen zijn belangrijk voor jou:
+
+
+    Dit wil ik onthouden van de cultuur in {projectCountry}:
+
+    "{answerQ1}"
+
+    -----------------------------
+
+    Deze bijzondere interactie heeft impact gemaakt op mij:
+
+    "{answerQ2}"
+
+    -----------------------------
+
+    Dit heb ik geleerd of ontdekt over mezelf:
+
+    "{answerQ3}"
+
+    -----------------------------
+
+    Jouw score op de drie reflectiestellingen: {score} uit 9.
+
+    {scoreFeedback}
+
+    -----------------------------
+
+    Onthoud:
+
+    "{quote}"
+
+    Door interacties met mensen uit een andere cultuur word je opener,
+    zachter en heb je meer respect voor de ander. Dit geldt niet alleen
+    tijdens project, maar kan je ook toepassen in je dagelijkse leven
+    in Nederland. Zo wordt de wereld een stukje mooier!
+
+  footer: |
+    -----------------------------
+
+    Bedankt voor het parkeren van je cultuur!
+
+    -----------------------------

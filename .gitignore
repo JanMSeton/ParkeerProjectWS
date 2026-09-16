@@ -1,3 +1,5 @@
 venv
 __pycache__
 Node button/button/node_modules
+frontend/node_modules
+frontend/*.json

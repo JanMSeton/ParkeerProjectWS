@@ -3,11 +3,11 @@ pages:
 - text: 'World Servants Parkeerautomaat<br><br>Druk op ENTER om te starten.'
 
 - text: 'Wat is je naam?<br>Typ je naam en druk op enter.'
-  input: "Mijn naam is ${myName}"
+  input: "Mijn naam is ${currentInput}"
   property: 'enterName'
 
 - text: 'In welk land ben je op project geweest deze zomer?<br>Type het land en druk op enter.'
-  input: 'Ik ben in ${myCountry} geweest.'
+  input: 'Ik ben in ${currentInput} geweest.'
   property: 'enterCountry'
 
 - text: 'Welkom, ${myName}<br><br>Afgelopen zomer ben je op project geweest. Dat was vast een bijzondere ervaring. Je hebt kennis gemaakt met een andere cultuur.<br>Door de volgende vragen te beantwoorden parkeer je hier tijdelijk je cultuur. Je krijgt een Bon van Betekenis terug en deze zal je helpen om je projectervaringen mee te nemen.<br><br>Druk op enter.'

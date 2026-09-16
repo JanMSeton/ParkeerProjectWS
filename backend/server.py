@@ -11,27 +11,15 @@ Usage::
 from http.server import BaseHTTPRequestHandler, HTTPServer
 import logging
 import json
-import yaml
-from PIL import Image
 import os
 import time
 
 import printer
-import receipt
+import receiptVBW
+import backend.receiptWSF as receiptWSF
+import dataUtil
 
 p = printer.create_printer()
-logo_path = "./WS-logo-black.bmp"
-
-# Mapping of answers to specific texts
-data_path = os.path.join(
-    os.path.dirname(os.path.abspath(__file__)),
-    "..",
-    "data",
-    "answer_text_mapping.yaml"
-)
-
-with open(data_path, encoding="utf-8") as f:
-    yaml_text = yaml.safe_load(f)
 
 logger = logging.getLogger(__name__)
 logging.basicConfig(
@@ -46,8 +34,6 @@ class S(BaseHTTPRequestHandler):
         self.send_response(200)
         self.send_header('Content-type', 'application/json')
         self.send_header('Access-Control-Allow-Origin', '*')  # Allow all origins
-        # self.send_header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS')  # Allow specific methods
-        # self.send_header('Access-Control-Allow-Headers', 'Content-Type')  # Allow specific headers
         self.end_headers()
 
     def do_OPTIONS(self):
@@ -73,27 +59,14 @@ class S(BaseHTTPRequestHandler):
         flow = data.get("flow", "wsf")
 
         if flow == "festival":
-            receipt_template = receipt.create_festival_receipt(
-                data,
-                festival_yaml
-            )
+            receipt_template = receiptWSF.create_receipt_WSF(data)
         else:
-            receipt_template = receipt.create_receipt(
-                data,
-                wsf_yaml
-            )
+            receipt_template = receiptVBW.create_receipt_VBW(data)
 
         # Print the receipt
         global p
         try:
-            if os.path.exists(logo_path):
-                logo = Image.open(logo_path)
-            else:
-                logo = None            
-                logger.warning(
-                f"Logo not found: {logo_path}. Printing receipt without logo."
-            )
-            
+            logo = dataUtil.load_logo()
             printer.print_receipt(printer=p, receipt_template=receipt_template, logo=logo)
 
         except Exception:
@@ -145,9 +118,6 @@ class S(BaseHTTPRequestHandler):
         self.wfile.write(json.dumps(response).encode("utf-8"))
         logger.info("Sent response to browser")
 
-
-
-
 def run(server_class=HTTPServer, handler_class=S, port=5000):
 
     server_address = ('', port)
@@ -164,61 +134,11 @@ def run(server_class=HTTPServer, handler_class=S, port=5000):
         httpd.server_close()
         logger.info("HTTP server closed.")
 
+
 if __name__ == '__main__':
     from sys import argv
-    # Parse yaml into json for browser
-    base_dir = os.path.dirname(os.path.abspath(__file__))
-
-    data_dir = os.path.join(base_dir, "..", "data")
-
-    frontend_dir = os.path.join(base_dir, "..", "frontend")
-
-    old_yaml_path = os.path.join(
-        data_dir,
-        "answer_text_mapping.yaml"
-    )
-
-    festival_yaml_path = os.path.join(
-        data_dir,
-        "answer_text_WSF.yaml"
-    )
-
-    with open(old_yaml_path, encoding="utf-8") as f:
-        wsf_yaml = yaml.safe_load(f)
-
-    with open(festival_yaml_path, encoding="utf-8") as f:
-        festival_yaml = yaml.safe_load(f)
-
-    # ---------------------------------------------------------
-    # Convert question YAML to JSON for the frontend
-    # ---------------------------------------------------------
-
-    questions_yaml_path = os.path.join(
-        data_dir,
-        "questions_WSF.yaml"
-    )
-
-    questions_json_path = os.path.join(
-        frontend_dir,
-        "questions_WSF.json"
-    )
-
-    with open(questions_yaml_path, "r", encoding="utf-8") as yaml_in:
-        questions_data = yaml.safe_load(yaml_in)
-
-    with open(questions_json_path, "w", encoding="utf-8") as json_out:
-        json.dump(
-            questions_data,
-            json_out,
-            ensure_ascii=False,
-            indent=2
-        )
-
-    logger.info(
-        "Converted %s -> %s",
-        questions_yaml_path,
-        questions_json_path
-    )
+    dataUtil.convert_question_yaml_to_json("questions_VBW.yaml")
+    dataUtil.convert_question_yaml_to_json("questions_WSF.yaml")
 
     if len(argv) == 2:
         run(port=int(argv[1]))

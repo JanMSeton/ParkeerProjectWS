@@ -2,66 +2,11 @@ import logging
 import random
 from datetime import datetime
 
+import dataUtil
+
 logger = logging.getLogger(__name__)
 
-
-def create_receipt(data, yaml_text):
-    """
-    Existing WSF receipt flow.
-
-    This is your current receipt implementation.
-    """
-    answer_text_mapping = yaml_text["answer_text_mapping"]
-    dynamic_responses = yaml_text["dynamic_responses"]
-    receipt_template_header = yaml_text["receipt_template"]["header"]
-    receipt_template_footer = yaml_text["receipt_template"]["footer"]
-
-    my_name = data.get("myName", "..........")
-    answers = data.get("answers", {})
-
-    date_today = datetime.now().strftime("%d %B %Y")
-
-    receipt_template = (
-        f"\n\nBon van Betekenis van\n{my_name}\n"
-        f"{date_today}\n\n"
-    )
-
-    receipt_template += receipt_template_header
-
-    for question_id, answer in answers.items():
-        dynamic_text = process_dynamic_text(
-            question_id,
-            answer,
-            answer_text_mapping,
-            dynamic_responses,
-        )
-
-        # Existing flow
-        if question_id in {
-            "Q5",
-            "Q6",
-            "Q7",
-            "Q8",
-            "Q9",
-            "Q10",
-            "Q11",
-            "Q13",
-            "Q14",
-            "Q15",
-        }:
-            receipt_template += f"{dynamic_text}\n"
-        else:
-            logger.warning(
-                "Unexpected question ID for WSF flow: %s",
-                question_id,
-            )
-
-    receipt_template += receipt_template_footer
-
-    return receipt_template
-
-
-def create_festival_receipt(data, yaml_text):
+def create_receipt_WSF(data):
     """
     Receipt generator for the new Festival flow.
     """
@@ -70,7 +15,7 @@ def create_festival_receipt(data, yaml_text):
     my_name = data.get("myName", "..........")
     project_country = data.get("projectCountry", "..........")
 
-    config = yaml_text
+    config = dataUtil.parse_answer_YAML("answer_text_WSF")
     template = config["receipt_template"]
 
     # ---------------------------------------------------------
@@ -195,31 +140,3 @@ def get_festival_score_feedback(score, feedback_mapping):
     )
 
     return ""
-
-
-def process_dynamic_text(
-    question_id,
-    answer,
-    answer_text_mapping,
-    dynamic_responses,
-):
-    if question_id in answer_text_mapping:
-        specific_mapping = answer_text_mapping[question_id]
-
-        return specific_mapping.get(
-            str(answer).lower(),
-            f"Onbekend antwoord voor {question_id}.",
-        )
-
-    if question_id in dynamic_responses:
-        default_response = dynamic_responses[question_id].get(
-            "default",
-            "",
-        )
-
-        return default_response.replace(
-            "{answer}",
-            str(answer),
-        )
-
-    return f"Geen tekst gevonden voor vraag {question_id}."

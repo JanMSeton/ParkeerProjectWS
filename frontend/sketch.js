@@ -5,43 +5,25 @@ let cooldown = 45;
 
 // DOM elements.
 let pageNumber = 1; // start with first page (or another page when testing!).
-let randomPage1 = null; // Store the randomly chosen page after Page 4
-let randomPage2 = null; // Second random page for the statements
-let randomPage3 = null; // Third random page for the statements
-let waitingForNextRandomPage1 = false; // State to track keypresses between random pages
-let waitingForNextRandomPage2 = false; // State to track keypresses between random pages
-let randomPage4 = null; // Second random page for the statements
-let randomPage5 = null; // Third random page for the statements
 
 let pages = [];
 let pagesLoaded = false;
 let displayedPage = null;
 
-let currentName = "";
 let myName = "";
 let currentInput = "";
-let currentCountry = "";
 let myCountry = "";
-
-const pagePropertyKeys = ["enterName", "enterCountry", "stringInput", "oneTwoThreeInput", "abcInput", "zeroNineInput"];
-const PageProperty = Object.fromEntries(pagePropertyKeys.map(k => [k, k]));
 
 let answers = {};
 
 let pageElements = [];
 
-let answersJSON = JSON.stringify(answers);
-console.log(answersJSON); // Example: {"Q1":"2","Q2":"4","Q3":"3"}
-
 // Load page text from JSON
 async function loadPages() {
   const response = await fetch("/questions_WSF.json");
 
-  if (!response.ok) {
-    throw new Error(
-      `Could not load questions json: ${response.status}`
-    );
-  }
+  if (!response.ok)
+    throw new Error(`Could not load questions json: ${response.status}`);
 
   return await response.json();
 }
@@ -61,9 +43,8 @@ function interpolate(text) {
 
 // Remove the current page from the screen
 function clearPage() {
-  for (const element of pageElements) {
+  for (const element of pageElements)
     element.remove();
-  }
 
   pageElements = [];
 }
@@ -71,12 +52,8 @@ function clearPage() {
 // Draw a normal text page
 function drawTextPage(page) {
   clearPage();
-  if (page.property) {
-    pageProperty = page.property;
-  }
 
   const styledText = createP(interpolate(page.text));
-  console.log("Redrawing text:", interpolate(page.text));
 
   styledText.position(
     width / 2 - 300,
@@ -89,7 +66,6 @@ function drawTextPage(page) {
 
   if (page.input) {
     const styledInput = createP(interpolate(page.input));
-    console.log("Redrawing input:", interpolate(page.input));
 
     styledInput.position(
       width / 2 - 200,
@@ -152,11 +128,12 @@ function createPages(data) {
   console.log("Pages loaded:", pages);
 }
 
-
+// Go to page n, with obvershoot prevention
 function goToPage(n) {
   pageNumber = constrain(n, 1, pages.length - 2);
 }
 
+//p5
 function setup() {
   console.log("SETUP RUNNING");
 
@@ -171,6 +148,7 @@ function setup() {
     });
 }
 
+//p5
 function draw() {
   background(0);
 
@@ -220,20 +198,16 @@ function drawPageNavigation() {
   fill(255);
   textSize(16);
   textAlign(LEFT, BOTTOM);
-  // text(`Page ${pageNumber} of ${pages.length}`, 50, 50);
-
   textAlign(RIGHT, BOTTOM);
-  // text("Press Left/Right Arrow to Navigate", width - 10, height - 10);
 }
 
+// Handle special key inputs
 function handlePageWithProperty(key, page) {
   if (!page?.property) {
-    
     return;
   }
 
   const property = page.property;
-  console.log("Property:", property);
 
   const allowedInputs = {
     oneTwoThreeInput: ['1', '2', '3'],
@@ -241,13 +215,12 @@ function handlePageWithProperty(key, page) {
     zeroNineInput: ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'],
   };
 
-  // Handle Backspace for text inputs
+  // Handle Backspace
   if (key === 'Backspace') {
     currentInput = currentInput.slice(0, -1);
-    console.log(`Updated input after backspace for Q${pageNumber}: ${currentInput}`);
-    if (page.input) {
+    if (page.input)
       drawTextPage(page);
-    }
+
     return;
   }
 
@@ -256,14 +229,12 @@ function handlePageWithProperty(key, page) {
     if (allowedInputs[property].includes(key)) {
       if (property === "zeroNineInput") {
         currentInput += key;
-      } else {
+      }
+      else {
         currentInput = key;
       }
       answers[`Q${pageNumber}`] = currentInput;
 
-      console.log(
-        `${property} input recorded for Q${pageNumber}: ${currentInput}`
-      );
       drawTextPage(page);
     }
     return;
@@ -281,28 +252,19 @@ function handlePageWithProperty(key, page) {
 
   // Add character and capitalize first letter
   currentInput += key;
-  currentInput =
-    currentInput.charAt(0).toUpperCase() + currentInput.slice(1);
-
+  currentInput = currentInput.charAt(0).toUpperCase() + currentInput.slice(1);
   answers[`Q${pageNumber}`] = currentInput;
 
-  console.log(`Updated input for Q${pageNumber}: ${currentInput}`);
-  console.log(answers);
-
   if (page.input) {
-    if (property === "enterName") {
-      console.log("Name confirmed: " + myName);
+    if (property === "enterName")
       myName = currentInput;
-    }
 
-    if (property === "enterCountry") {
-      console.log("Name confirmed: " + myCountry);
+    if (property === "enterCountry")
       myCountry = currentInput;
-    }
-    drawTextPage(page);
   }
 }
 
+// Hanlde keypress
 document.addEventListener("keydown", function (event) {
   const key = event.key;
   const page = pages[pageNumber - 1];
@@ -326,7 +288,8 @@ document.addEventListener("keydown", function (event) {
       console.log("Tried to print while printer wasn't ready");
       pageNumber = pages.length - 1;
       displayedPage = null;
-    } else {
+    }
+    else {
       pageNumber = 1;
       displayedPage = null;
     }
@@ -375,27 +338,18 @@ function handleEnter(page, event) {
   currentInput = '';
 }
 
-
-function startProgramma() {
-  if (pageNumber === 1) {
-    pageNumber = 2;
-    displayedPage = null;
-  }
-}
-
 function sendAnswers() {
-const payload = {
-  flow: "festival",
-  myName: myName,
-  projectCountry: myCountry,
-  answers: answers
-};
+  const payload = {
+    flow: "festival",
+    myName: myName,
+    projectCountry: myCountry,
+    answers: answers
+  };
 
   console.log("payload: ", payload);
 
-  if (printerReady === false) {
+  if (printerReady === false)
     return false;
-  }
 
   printerReady = false;
 
@@ -405,33 +359,30 @@ const payload = {
       "Content-Type": "application/json",
     },
     body: JSON.stringify(payload),
+  }
+  ).then(response => response.json()
+  ).then(data => {
+    console.log("Printer response:", data);
+
+    cooldown = data.cooldown
+
+    if (data.error === "FATAL") {
+      console.error("FATAL: printer server needs manual restart");
+
+      printerReady = false;
+      pageNumber = pages.length - 1;
+      displayedPage = null;
+      return;
+    }
+
+    if (data.ready) {
+      printerReady = true;
+      myName = '';
+      answers = {};
+
+      console.log("Printer is ready again.");
+    }
   })
-
-    .then(response => response.json())
-
-    .then(data => {
-      console.log("Printer response:", data);
-
-      cooldown = data.cooldown
-
-      if (data.error === "FATAL") {
-        console.error("FATAL: printer server needs manual restart");
-
-        printerReady = false;
-        pageNumber = pages.length - 1;
-        displayedPage = null;
-        return;
-      }
-
-      if (data.ready) {
-        printerReady = true;
-        myName = '';
-        currentName = '';
-        answers = {};
-
-        console.log("Printer is ready again.");
-      }
-    })
 
     .catch(error => {
       console.error("Printer error:", error);

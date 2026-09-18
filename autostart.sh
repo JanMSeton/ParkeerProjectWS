@@ -1,10 +1,14 @@
 #!/bin/bash
 
-python3 -u server.py &
+python3 -u backend/server.py &
 PRINTER_PID=$!
+
+cd frontend
 
 npx http-server -p 5503 -c-1 &
 HTTP_PID=$!
+
+cd ../
 
 sleep 5
 

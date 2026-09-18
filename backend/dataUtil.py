@@ -19,9 +19,9 @@ def parse_answer_YAML(filename):
     )
 
     with open(YAML_data_path, encoding="utf-8") as f:
-        VBW_yaml = yaml.safe_load(f)
+        answerObject = yaml.safe_load(f)
 
-    return VBW_yaml
+    return answerObject
 
 def load_logo():
     if os.path.exists(LOGO_PATH):

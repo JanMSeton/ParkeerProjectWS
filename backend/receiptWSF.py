@@ -15,85 +15,32 @@ def create_receipt_WSF(data):
     my_name = data.get("myName", "..........")
     project_country = data.get("projectCountry", "..........")
 
-    config = dataUtil.parse_answer_YAML("answer_text_WSF")
-    template = config["receipt_template"]
+    template = dataUtil.parse_answer_YAML("answer_text_WSF.yaml")
 
-    # ---------------------------------------------------------
-    # Calculate statement score
-    # ---------------------------------------------------------
-
-    statement_questions = config.get("statement_questions", [])
-
+    statement_questions = template.get("statement_questions", [])
     score = 0
-
     for question_id in statement_questions:
         answer = answers.get(question_id)
 
         if answer is None:
-            logger.warning(
-                "Missing statement answer: %s",
-                question_id,
-            )
+            logger.warning("Missing statement answer: %s", question_id)
             continue
-
         try:
             score += int(answer)
         except (TypeError, ValueError):
-            logger.warning(
-                "Invalid statement answer for %s: %r",
-                question_id,
-                answer,
-            )
+            logger.warning("Invalid statement answer for %s: %r", question_id, answer)
 
-    # ---------------------------------------------------------
-    # Score feedback
-    # ---------------------------------------------------------
+    score_feedback = get_festival_score_feedback(score, template.get("score_feedback", {}))
 
-    score_feedback = get_festival_score_feedback(
-        score,
-        config.get("score_feedback", {}),
-    )
-
-    # ---------------------------------------------------------
-    # Random quote
-    # ---------------------------------------------------------
-
-    quotes = config.get("quotes", [])
-
+    quotes = template.get("quotes", [])
     quote = random.choice(quotes) if quotes else ""
 
-    # ---------------------------------------------------------
-    # Open questions
-    # ---------------------------------------------------------
+    memory_questions = template.get("memory_questions", {})
+    answer_q1 = answers.get(memory_questions.get("culture"),"")
+    answer_q2 = answers.get(memory_questions.get("interaction"),"")
+    answer_q3 = answers.get(memory_questions.get("self"),"")
 
-    memory_questions = config.get("memory_questions", {})
-
-    answer_q1 = answers.get(
-        memory_questions.get("culture"),
-        ""
-    )
-
-    answer_q2 = answers.get(
-        memory_questions.get("interaction"),
-        ""
-    )
-
-    answer_q3 = answers.get(
-        memory_questions.get("self"),
-        ""
-    )
-
-    # ---------------------------------------------------------
-    # Date/time
-    # ---------------------------------------------------------
-
-    date_time = datetime.now().strftime(
-        "%d-%m-%Y %H:%M"
-    )
-
-    # ---------------------------------------------------------
-    # Build receipt
-    # ---------------------------------------------------------
+    date_time = datetime.now().strftime("%d-%m-%Y %H:%M")
 
     values = {
         "myName": my_name,
@@ -106,37 +53,19 @@ def create_receipt_WSF(data):
         "scoreFeedback": score_feedback,
         "quote": quote,
     }
-
-    receipt = template["header"].format(**values)
-
-    receipt += "\n"
-    receipt += template["footer"].format(**values)
+    receipt = template["receipt_template"].format(**values)
 
     return receipt
 
 
 def get_festival_score_feedback(score, feedback_mapping):
-    if 3 <= score <= 4:
-        return feedback_mapping.get(
-            "3-4",
-            "",
-        )
-
-    if 5 <= score <= 6:
-        return feedback_mapping.get(
-            "5-6",
-            "",
-        )
-
-    if 7 <= score <= 9:
-        return feedback_mapping.get(
-            "7-9",
-            "",
-        )
-
-    logger.warning(
-        "Unexpected Festival score: %s",
-        score,
-    )
-
-    return ""
+    match score:
+        case 3 | 4:
+            return feedback_mapping.get("3-4", "")
+        case 5 | 6:
+            return feedback_mapping.get("5-6", "")
+        case 7 | 8:
+            return feedback_mapping.get("7-9", "")
+        case _:
+            logger.warning("Unexpected Festival score: %s", score)
+            return ""

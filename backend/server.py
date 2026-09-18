@@ -11,19 +11,18 @@ Usage::
 from http.server import BaseHTTPRequestHandler, HTTPServer
 import logging
 import json
-import os
 import time
 
 import printer
 import receiptVBW
-import backend.receiptWSF as receiptWSF
+import receiptWSF
 import dataUtil
 
 p = printer.create_printer()
 
 logger = logging.getLogger(__name__)
 logging.basicConfig(
-    level=logging.INFO,
+    level=logging.DEBUG,
     force=True
     )
 
@@ -137,8 +136,8 @@ def run(server_class=HTTPServer, handler_class=S, port=5000):
 
 if __name__ == '__main__':
     from sys import argv
-    dataUtil.convert_question_yaml_to_json("questions_VBW.yaml")
-    dataUtil.convert_question_yaml_to_json("questions_WSF.yaml")
+    dataUtil.convert_question_yaml_to_json("questions_VBW.yaml", "questions_VBW.json")
+    dataUtil.convert_question_yaml_to_json("questions_WSF.yaml", "questions_WSF.json")
 
     if len(argv) == 2:
         run(port=int(argv[1]))

@@ -3,15 +3,15 @@ flow: festival
 # Questions that contain the three reflection statements.
 # Change these IDs if your new frontend uses different question numbers.
 statement_questions:
-  - "Q4"
-  - "Q5"
-  - "Q6"
+  - "Q10"
+  - "Q11"
+  - "Q12"
 
 # The three open questions used in the receipt.
 memory_questions:
-  culture: "Q1"
-  interaction: "Q2"
-  self: "Q3"
+  culture: "Q6"
+  interaction: "Q7"
+  self: "Q8"
 
 score_feedback:
   "3-4": "Dit project heeft niet zo veel bijgedragen aan jouw culturele competentie."
@@ -23,69 +23,66 @@ quotes:
   - "Oordeel niet, verwonder je slechts."
   - "Cultuur is geen kwestie van goed of fout, maar anders."
 
-receipt_template:
-  header: |
-    Bon
-    van betekenis van {myName}
+receipt_template: |
+  Bon van betekenis van {myName}
 
-    {dateTime}
+  {dateTime}
 
-    -----------------------------
+  -----------------------------
 
-    Dit is jouw Bon van Betekenis om de culturele interacties en ervaringen
-    in {projectCountry} te onthouden.
+  Dit is jouw Bon van Betekenis om de culturele interacties en ervaringen
+  in {projectCountry} te onthouden.
 
 
-    -----------------------------
+  -----------------------------
 
-    Deze zomer heb je veel mensen ontmoet in {projectCountry}. Waarschijnlijk
-    zijn dit mensen met een heel ander leven dan jij. Je hebt je vast af en
-    toe verbaasd of je afgevraagd waarom iets gebeurde zoals het gebeurde.
-    Vaak zit achter zulke gebeurtenissen een logische reden.
-    Hopelijk heb je ook antwoorden gekregen op deze waarom gebeurt dit
-    zo-vragen!
+  Deze zomer heb je veel mensen ontmoet in {projectCountry}. Waarschijnlijk
+  zijn dit mensen met een heel ander leven dan jij. Je hebt je vast af en
+  toe verbaasd of je afgevraagd waarom iets gebeurde zoals het gebeurde.
+  Vaak zit achter zulke gebeurtenissen een logische reden.
+  Hopelijk heb je ook antwoorden gekregen op deze waarom gebeurt dit
+  zo-vragen!
 
-    -----------------------------
+  -----------------------------
 
-    De volgende projectherinneringen zijn belangrijk voor jou:
+  De volgende projectherinneringen zijn belangrijk voor jou:
 
 
-    Dit wil ik onthouden van de cultuur in {projectCountry}:
+  Dit wil ik onthouden van de cultuur in {projectCountry}:
 
-    "{answerQ1}"
+  "{answerQ1}"
 
-    -----------------------------
+  -----------------------------
 
-    Deze bijzondere interactie heeft impact gemaakt op mij:
+  Deze bijzondere interactie heeft impact gemaakt op mij:
 
-    "{answerQ2}"
+  "{answerQ2}"
 
-    -----------------------------
+  -----------------------------
 
-    Dit heb ik geleerd of ontdekt over mezelf:
+  Dit heb ik geleerd of ontdekt over mezelf:
 
-    "{answerQ3}"
+  "{answerQ3}"
 
-    -----------------------------
+  -----------------------------
 
-    Jouw score op de drie reflectiestellingen: {score} uit 9.
+  Jouw score op de drie reflectiestellingen: {score} uit 9.
 
-    {scoreFeedback}
+  {scoreFeedback}
 
-    -----------------------------
+  -----------------------------
 
-    Onthoud:
+  Onthoud:
 
-    "{quote}"
+  "{quote}"
 
-    Door interacties met mensen uit een andere cultuur word je opener,
-    zachter en heb je meer respect voor de ander. Dit geldt niet alleen
-    tijdens project, maar kan je ook toepassen in je dagelijkse leven
-    in Nederland. Zo wordt de wereld een stukje mooier!
+  Door interacties met mensen uit een andere cultuur word je opener,
+  zachter en heb je meer respect voor de ander. Dit geldt niet alleen
+  tijdens project, maar kan je ook toepassen in je dagelijkse leven
+  in Nederland. Zo wordt de wereld een stukje mooier!
 
-  footer: |
-    -----------------------------
+  -----------------------------
 
-    Bedankt voor het parkeren van je cultuur!
+  Bedankt voor het parkeren van je cultuur!
 
-    -----------------------------
+  -----------------------------

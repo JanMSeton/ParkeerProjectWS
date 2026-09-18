@@ -6,7 +6,7 @@ import dataUtil
 logger = logging.getLogger(__name__)
 
 def create_receipt_VBW(data):
-    yaml_text =  dataUtil.parse_answer_YAML("answer_text_VBW")
+    yaml_text =  dataUtil.parse_answer_YAML("answer_text_VBW.yaml")
     answer_text_mapping = yaml_text["answer_text_mapping"]
     dynamic_responses = yaml_text["dynamic_responses"]
     receipt_template_header = yaml_text["receipt_template"]["header"]

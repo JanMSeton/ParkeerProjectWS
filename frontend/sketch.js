@@ -128,7 +128,7 @@ function createPages(data) {
   console.log("Pages loaded:", pages);
 }
 
-// Go to page n, with obvershoot prevention
+// Go to page n, with overshoot prevention
 function goToPage(n) {
   pageNumber = constrain(n, 1, pages.length - 2);
 }
@@ -261,6 +261,8 @@ function handlePageWithProperty(key, page) {
 
     if (property === "enterCountry")
       myCountry = currentInput;
+
+    drawTextPage(page);
   }
 }
 
@@ -331,6 +333,11 @@ function handleEnter(page, event) {
     randomNext = null;
     currentInput = '';
     return;
+  }
+
+  // Handle enter for input
+  if(page?.input) {
+    answers[`Q${pageNumber}`] = currentInput ?? "";
   }
 
   // Normal navigation

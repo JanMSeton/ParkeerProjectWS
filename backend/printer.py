@@ -79,7 +79,7 @@ def recover_printer(printer):
 
 
 def print_receipt(printer, receipt_template, logo):
-    logger.debug("DEBUG", receipt_template);
+    logger.debug(receipt_template);
     return;
     with EscposIO(printer, autoclose=False) as p:
 

@@ -64,7 +64,7 @@ def get_festival_score_feedback(score, feedback_mapping):
             return feedback_mapping.get("3-4", "")
         case 5 | 6:
             return feedback_mapping.get("5-6", "")
-        case 7 | 8:
+        case 7 | 8 | 9:
             return feedback_mapping.get("7-9", "")
         case _:
             logger.warning("Unexpected Festival score: %s", score)

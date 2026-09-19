@@ -21,10 +21,6 @@ let pageElements = [];
 // Load page text from JSON
 async function loadPages() {
   const response = await fetch("/questions_WSF.json");
-
-  if (!response.ok)
-    throw new Error(`Could not load questions json: ${response.status}`);
-
   return await response.json();
 }
 
@@ -84,13 +80,16 @@ function drawWaitingPage() {
 
   const styledText = createP(
     `De printer is nog niet klaar om je bon uit te printen. ` +
-    `Wacht nog even, dit duurt ongeveer ${cooldown} seconden.`
+    `Wacht nog even, dit duurt nog ongeveer ${cooldown} seconden. ` +
+    'Druk straks op P om opnieuw te proberen.'
   );
 
   styledText.position(width / 2 - 200, 550);
   styledText.class("lowlightSmall");
 
   pageElements.push(styledText);
+
+  setTimeout(() => {pageNumber = pages.length - 2}, 10000);
 }
 
 // Draw the error page
@@ -266,7 +265,7 @@ function handlePageWithProperty(key, page) {
   }
 }
 
-// Hanlde keypress
+// Handle keypress
 document.addEventListener("keydown", function (event) {
   const key = event.key;
   const page = pages[pageNumber - 1];
@@ -286,17 +285,12 @@ document.addEventListener("keydown", function (event) {
 
   // Printing
   if (page?.property === "final" && key.toLowerCase() === 'p') {
-    if (sendAnswers() === false) {
-      console.log("Tried to print while printer wasn't ready");
-      pageNumber = pages.length - 1;
-      displayedPage = null;
-    }
-    else {
-      pageNumber = 1;
-      displayedPage = null;
-    }
+    sendAnswers();
+    console.log("Pagenumber:", pageNumber);
+    displayedPage = null;
     return;
   }
+
 
   // Input
   if (page?.property) {
@@ -336,7 +330,7 @@ function handleEnter(page, event) {
   }
 
   // Handle enter for input
-  if(page?.input) {
+  if (page?.input) {
     answers[`Q${pageNumber}`] = currentInput ?? "";
   }
 
@@ -355,51 +349,41 @@ function sendAnswers() {
 
   console.log("payload: ", payload);
 
-  if (printerReady === false)
-    return false;
 
   printerReady = false;
 
   fetch("http://127.0.0.1:5000/submit", {
     method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
+    headers: { "Content-Type": "application/json" },
     body: JSON.stringify(payload),
-  }
-  ).then(response => response.json()
-  ).then(data => {
-    console.log("Printer response:", data);
-
-    cooldown = data.cooldown
-
-    if (data.error === "FATAL") {
-      console.error("FATAL: printer server needs manual restart");
-
-      printerReady = false;
-      pageNumber = pages.length - 1;
-      displayedPage = null;
-      return;
-    }
-
-    if (data.ready) {
-      printerReady = true;
-      myName = '';
-      answers = {};
-
-      console.log("Printer is ready again.");
-    }
   })
+    .then(response => response.json())
+    .then(data => {
+      console.log("Printer response:", data);
 
+      if (data.error === "FATAL") {
+        console.error("FATAL: printer server needs manual restart");
+        printerReady = false;
+        pageNumber = pages.length; // error page
+      } else if (data.ok === false) {
+        console.warn(`Printer busy, retrying in ${data.cooldown}s`);
+        cooldown = data.cooldown; // reflect the real wait time on the waiting page
+        pageNumber = pages.length - 1; // waiting page
+      } else if (data.ok === true) {
+        printerReady = true;
+        myName = '';
+        myCountry = '';
+        answers = {};
+        console.log("Printer is ready again.");
+        pageNumber = 1;
+      }
+
+      displayedPage = null;
+    })
     .catch(error => {
       console.error("Printer error:", error);
-
-      printerReady = true;
-      pageNumber = pages.length - 1;
+      printerReady = false;
+      pageNumber = pages.length; // error page — was pages.length - 1 (waiting)
       displayedPage = null;
-
-      return;
     });
-
-  return true;
 }

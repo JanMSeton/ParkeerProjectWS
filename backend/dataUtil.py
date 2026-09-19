@@ -10,7 +10,7 @@ logger = logging.getLogger(__name__)
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 DATA_DIR = os.path.join(BASE_DIR, "..", "data")
 FRONTEND_DIR = os.path.join(BASE_DIR, "..", "frontend")
-LOGO_PATH = "./WS-logo-black.bmp"
+LOGO_PATH = os.path.join(BASE_DIR, "..", "WS-logo-black.bmp")
 
 def parse_answer_YAML(filename):
     YAML_data_path = os.path.join(
@@ -26,6 +26,7 @@ def parse_answer_YAML(filename):
 def load_logo():
     if os.path.exists(LOGO_PATH):
         logo = Image.open(LOGO_PATH)
+        logger.info(f"Found logo: {LOGO_PATH}")
     else:
         logo = None            
         logger.warning(

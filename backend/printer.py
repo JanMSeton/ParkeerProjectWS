@@ -79,8 +79,6 @@ def recover_printer(printer):
 
 
 def print_receipt(printer, receipt_template, logo):
-    logger.debug(receipt_template);
-    return;
     with EscposIO(printer, autoclose=False) as p:
 
         if logo:
@@ -92,5 +90,6 @@ def print_receipt(printer, receipt_template, logo):
         if logo:
             p.set(align="center")
             p.printer.image(logo)
-    time.sleep(COOLDOWN)
-    logger.info("Receipt print job completed.")
+    logger.info(f"Printjob complete, setting busy to {COOLDOWN}s")
+
+    return

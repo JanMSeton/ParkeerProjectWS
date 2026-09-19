@@ -26,6 +26,8 @@ logging.basicConfig(
     force=True
     )
 
+busy_until = 0  # epoch timestamp; server rejects requests until this passes
+
 RECOVERYTIME = 300
 
 class S(BaseHTTPRequestHandler):
@@ -48,10 +50,25 @@ class S(BaseHTTPRequestHandler):
         self.wfile.write("GET request for {}".format(self.path).encode('utf-8'))
            
     def do_POST(self):
+
         content_length = int(self.headers['Content-Length'])  # Get the size of data
         post_data = self.rfile.read(content_length)  # Get the data itself
         logger.info("POST request,\nPath: %s\nHeaders:\n%s\n\nBody:\n%s\n",
                     str(self.path), str(self.headers), post_data.decode('utf-8'))
+
+        global busy_until
+        if time.time() < busy_until:
+            remaining = round(busy_until - time.time())
+            logger.info(f"Server waiting, rejecting request. {remaining}s left.")
+            self._set_response()
+            response = {
+                "ok": False,
+                "error": "Printer is recovering, please try again shortly.",
+                "cooldown": remaining,
+            }
+            self.wfile.write(json.dumps(response).encode("utf-8"))
+            return
+        
         body = post_data.decode('utf-8')
         data = json.loads(body)
 
@@ -67,6 +84,7 @@ class S(BaseHTTPRequestHandler):
         try:
             logo = dataUtil.load_logo()
             printer.print_receipt(printer=p, receipt_template=receipt_template, logo=logo)
+            busy_until = printer.COOLDOWN + time.time()
 
         except Exception:
 
@@ -80,7 +98,7 @@ class S(BaseHTTPRequestHandler):
                 response = {
                     "ok": False,
                     "error": "FATAL",
-                    "waittime": RECOVERYTIME,
+                    "cooldown": -1,
                 }
                 logger.error("Printer could not be recovered. Server will stop.")
                 self.wfile.write(json.dumps(response).encode("utf-8")) 
@@ -90,27 +108,22 @@ class S(BaseHTTPRequestHandler):
             else:
                 response = {
                     "ok": False,
-                    "error": "Printer connection lost; printer was reset.",
+                    "error": "RECOVERING",
                     "cooldown": RECOVERYTIME
                 }
-                logger.info(f"Printer has been recovered. Server will recover for {RECOVERYTIME}s and wait for new request.")
-                time.sleep(RECOVERYTIME)
-                self.wfile.write(json.dumps(response).encode("utf-8")) 
+                logger.info(f"Printer has been recovered. Server will reject requests for {RECOVERYTIME}s.")
+                busy_until = time.time() + RECOVERYTIME
+                self.wfile.write(json.dumps(response).encode("utf-8"))
                 logger.info("Sent response to browser")
                 return
 
         # Only reached when printing succeeded
-        logger.info("Receipt printed successfully.")
-
-        logger.info(f"Waiting {printer.COOLDOWN} seconds before printer is ready again...")
-        time.sleep(printer.COOLDOWN)
         logger.info("Printer is ready again.")
 
         self._set_response()
 
         response = {
             "ok": True,
-            "ready": True,
             "cooldown": printer.COOLDOWN
         }
 
